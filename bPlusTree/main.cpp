@@ -14,6 +14,7 @@
 #include "relation.hpp"
 #include "BPlusTree.hpp"
 #include <iostream>
+#include "def.h"
 
 int main(int argc, const char * argv[]) {
     

@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <set>
+#include "def.h"
 
 #ifndef relation_h
 #define relation_h

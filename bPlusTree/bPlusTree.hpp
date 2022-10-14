@@ -13,6 +13,8 @@
 //
 #include <iostream>
 #include <stack>
+#include "relation.hpp"
+#include "def.h"
 
 
 
