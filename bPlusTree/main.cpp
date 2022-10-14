@@ -1,23 +1,36 @@
 //
-// Project:    bPlusTree
+// Project:    b_tree
 // Filename:   main.cpp
-// Created on: 14.10.22
+// Created on: 26.10.21
 //
 // Developer(s):
-//	I) Artur Titkov
-//	   ArturTitkov@icloud.com
-//	   https://github.com/TitkovArtur
+//    I) Artur Titkov
 //
 // Description:
 //
 //
-// 
-//ww
-
+//
+//
+#include "relation.hpp"
+#include "BPlusTree.hpp"
 #include <iostream>
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
+    
+    
+    Relation r = Relation(10);
+    r.printRelation();
+    
+    
+    Record* a = new Record(10);
+    Record* b = new Record(20);
+    Record* c = new Record(15);
+    Record* d = new Record(5);
+    
+    BPlusTree tree(4);
+    LeafNode* leaf = (LeafNode*)tree.root;
+    
+    
+    
     return 0;
 }
