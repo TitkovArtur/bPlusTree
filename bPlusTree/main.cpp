@@ -12,26 +12,39 @@
 //
 //
 #include "relation.hpp"
-#include "BPlusTree.hpp"
+#include "bPlusTree.hpp"
 #include <iostream>
+#include <format>
+#include <chrono>
+#include <iostream>
+
+
 #include "def.h"
+
 
 int main(int argc, const char * argv[]) {
     
     
     Relation r = Relation(10);
-    r.printRelation();
+    
+
     
     
-    Record* a = new Record(10);
-    Record* b = new Record(20);
-    Record* c = new Record(15);
-    Record* d = new Record(5);
+    bPlusTree tree(4);
+    tree.insert(10);
+    tree.insert(20);
+    tree.insert(30);
+    tree.insert(40);
+    tree.insert(25);
     
-    BPlusTree tree(4);
-    LeafNode* leaf = (LeafNode*)tree.root;
+//    LeafNode* leaf = (LeafNode*)tree.root;
+    LeafNode* tmp = (LeafNode*)tree.root;
+
+//    fori(tmp->usedKeys){
+//        println(tmp->keys[i]);
+//    }
     
-    
-    
+
+    println("\n\n\n\n");
     return 0;
 }

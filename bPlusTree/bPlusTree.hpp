@@ -24,7 +24,7 @@
 struct Node;
 struct InnerNode;
 struct LeafNode;
-
+struct bPlusTree;
 
 
 
@@ -32,58 +32,40 @@ struct LeafNode;
 
 
 struct Node{
-public:
-    int usedKeys;
+    int usedKeys = 0;
     bool isLeaf;
     int* keys;
+    Node* parent = nullptr;
+    
+    void addParent(int order, bPlusTree* tree);
 };
 
 
 struct InnerNode : public Node{
     Node* children;
     
-    InnerNode(int order){
-        this->usedKeys = 0;
-        this->isLeaf = false;
-        this->keys = new int[order];
-        children = new Node[order + 1];
-    }
+    InnerNode(int order);
+    ~InnerNode();
 };
 
 struct LeafNode : public  Node{
     Record* pointers;
     LeafNode* nextLeaf;
     
-    LeafNode(int order){
-        usedKeys = 0;
-        isLeaf = true;
-        keys = new int[order];
-        pointers = new Record[order];
-        nextLeaf = nullptr;
-    }
+    LeafNode(int order);
+    ~LeafNode();
 };
 
 
-struct BPlusTree{
+struct bPlusTree{
     int order; // i.e. num keys per node
     Node* root;
     
-    BPlusTree(int d){
-        order = d;
-        root = new LeafNode(order);
-    }
+    bPlusTree(int order);
+    ~bPlusTree();
     
-    
+    void insert(int key);
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
 };
 
 
