@@ -35,7 +35,7 @@ Record::Record(int a){
 };
 
 Record::~Record(){
-    println("---> Rec destructor");
+//    println("---> Rec destructor");
 }
 
 

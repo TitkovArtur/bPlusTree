@@ -35,6 +35,7 @@ struct Node{
     int usedKeys = 0;
     bool isLeaf;
     int* keys;
+    int depth = 0;
     Node* parent = nullptr;
     
     void addParent(int order, bPlusTree* tree);
@@ -65,6 +66,7 @@ struct bPlusTree{
     ~bPlusTree();
     
     void insert(int key);
+    void print();
 
 };
 

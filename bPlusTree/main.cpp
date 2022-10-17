@@ -36,14 +36,25 @@ int main(int argc, const char * argv[]) {
     tree.insert(30);
     tree.insert(40);
     tree.insert(25);
+    tree.insert(50);
+    tree.insert(60);
+//    tree.insert(11);
+//    tree.insert(12);
+//    tree.insert(13);
     
-//    LeafNode* leaf = (LeafNode*)tree.root;
-    LeafNode* tmp = (LeafNode*)tree.root;
-
-//    fori(tmp->usedKeys){
-//        println(tmp->keys[i]);
+    tree.print();
+//
+    LeafNode* leaf;
+    InnerNode* tmp = (InnerNode*)tree.root;
+//    println(tmp->keys[0]);
+    leaf = (LeafNode*)&(tmp->children[1]);
+    if(leaf->parent == nullptr)
+        println("NULL");
+//
+//    fori(leaf->usedKeys){
+//        println(leaf->keys[i]);
 //    }
-    
+//
 
     println("\n\n\n\n");
     return 0;
