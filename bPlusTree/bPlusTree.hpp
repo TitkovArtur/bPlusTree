@@ -37,8 +37,10 @@ struct Node{
     int* keys;
     int depth = 0;
     Node* parent = nullptr;
+    virtual ~Node(){
+        println("-->Node destructor");
+    };
     
-    void addParent(int order, bPlusTree* tree);
 };
 
 
@@ -51,7 +53,7 @@ struct InnerNode : public Node{
 
 struct LeafNode : public  Node{
     Record* pointers;
-    LeafNode* nextLeaf;
+    LeafNode* nextLeaf = nullptr;
     
     LeafNode(int order);
     ~LeafNode();
@@ -67,7 +69,8 @@ struct bPlusTree{
     
     void insert(int key);
     void print();
-
+    void split(Node& left, Node& right, int key, bool leafSplit);
+    void clean(Node* curNode);
 };
 
 

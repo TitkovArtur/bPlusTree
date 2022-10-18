@@ -20,35 +20,58 @@
 
 
 //XXNODE
-void Node::addParent(int order, bPlusTree* tree){
 
-    if(this->parent == nullptr){ // create new root
+
+//Node::~Node(){
+//    println("---> Node Destructor");
+//    
+//}
+////    if(!isLeaf){
+////        InnerNode* tmp = (InnerNode*)this;
+////        fori(usedKeys){
+////            tmp->children[i].~Node();
+////        }
+////        tmp->~InnerNode();
+////    }else{
+////        LeafNode* tmp = (LeafNode*)this;
+////        tmp->~LeafNode();
+////    }
+////    delete [] keys;
+//}
+
+void bPlusTree::split(Node& left, Node& right, int key, bool leafSplit){
+    
+
+    if(left.parent == nullptr){ // create new root
         InnerNode* newNode = new InnerNode(order);
-        newNode->keys[0] = ((LeafNode*)this)->nextLeaf->keys[0];
-        newNode->children[0] = *this;
-        newNode->children[1] = *((LeafNode*)this)->nextLeaf;
-        tree->root = newNode;
+        newNode->keys[0] = right.keys[0];
+        newNode->children[0] = left;
+        newNode->children[1] = right;
+        this->root = newNode;
         newNode->usedKeys++;
-        newNode->depth = newNode->children[0].depth + 1;
-//        this->parent = newNode;
-//        ((LeafNode*)this)->nextLeaf->parent = newNode;
+        newNode->depth = left.depth + 1;
+        left.parent = newNode; // Not WORKING WHY ??? TODO
+        right.parent = newNode;
         newNode->children[0].parent = newNode;
         newNode->children[1].parent = newNode;
+        
     }else{ //add key to parent
-        InnerNode* parent = (InnerNode*)this->parent;
-        int ord = tree->order;
-        if(parent->usedKeys == ord){ // create new root
+        InnerNode* parent = (InnerNode*)left.parent;
+        
+        if(parent->usedKeys == order){ // create new root
             // split node
-            int* tmp = new int[ord+1];
+            int counter = 0;
 //            fori(ord){
-//                tmp[i]=
+//                if()
 //            }
+//
             
             
             
+
             // call addParent
         }else{ // add key
-            int key = ((LeafNode*)this)->nextLeaf->keys[0];
+            int key = right.keys[0];
             int pos = 0;
             fori(parent->usedKeys){
                 if(key > parent->keys[i])
@@ -59,12 +82,14 @@ void Node::addParent(int order, bPlusTree* tree){
                 parent->children[i+1] = parent->children[i];
             }
             parent->keys[pos] = key;
-            parent->children[pos+1] = *((LeafNode*)this)->nextLeaf;
+            parent->children[pos+1] = right;
             parent->usedKeys++;
+            fori(parent->usedKeys + 1){
+                parent->children[i].parent = parent;
+            }
         }
     }
 };
-
 
 //XXINNERNODE
 
@@ -74,7 +99,14 @@ InnerNode::InnerNode(int order){
     children = new Node[order + 1];
 }
 InnerNode::~InnerNode(){
-    println("--> destructor InnerNode");
+    println("----> destructor InnerNode");
+//    LeafNode* c = (LeafNode*)children;
+//    fori(usedKeys + 1){
+//        delete &c[i];
+////        ((LeafNode*)&(children[i]))->~LeafNode();
+//    }
+//    delete [] keys;
+//    delete [] children;
 }
 
 
@@ -93,8 +125,9 @@ LeafNode::LeafNode(int order){
 
 
 LeafNode::~LeafNode(){
-    println("--> LeafNode destructor");
-    
+    println("-->Leaf destructor");
+//    delete [] pointers;
+//    delete [] keys;
 }
 
 
@@ -106,9 +139,23 @@ bPlusTree::bPlusTree(int order){
     
     
 }
+void bPlusTree::clean(Node *curNode){
 
+    if(!curNode->isLeaf){
+        InnerNode* curInner = (InnerNode*)curNode;
+        fori(curInner->usedKeys){
+            clean(&curInner->children[i]);
+        }
+        delete [] curInner->children;
+    }
+    delete [] curNode->keys;
+        
+}
 bPlusTree::~bPlusTree(){
     println("--> bPlusTree destructor");
+    if(root!=nullptr){
+        delete root;
+    }
 }
 
 void bPlusTree::print(){
@@ -137,6 +184,7 @@ void bPlusTree::print(){
         printin("|");
         
     }
+    println("");
 }
 
 void bPlusTree::insert(int key){
@@ -167,6 +215,7 @@ void bPlusTree::insert(int key){
 
         
     }else{ // leaf capacity reached -> split node
+
         LeafNode* newLeaf = new LeafNode(order);
         int pos = 0;
         fori(order){
@@ -175,26 +224,59 @@ void bPlusTree::insert(int key){
             else
                 break;
         }
+        
         int* tmp = new int[order+1];
         fori(order){
             tmp[i] = curNode->keys[i];
         }
+        
         tmp[order] = key;
         sort(tmp, tmp+5);
         fori(order/2){
             curNode->keys[i] = tmp[i];
         }
+
+        //---------------------
         inrangei(order/2, order){
             curNode->keys[i] = -1;
         }
+
+        //---------------------
+
         fori(order/2 + 1){
             newLeaf->keys[i] = tmp[i + order/2];
         }
+
         curNode->usedKeys = order/2;
         newLeaf->usedKeys = order/2 + 1;
-        ((LeafNode*)curNode)->nextLeaf = newLeaf;
+        LeafNode* curLeaf = (LeafNode*)curNode;
         
-        
-        curNode->addParent(order, this);
+        if(curLeaf->nextLeaf != nullptr)
+            newLeaf->nextLeaf = curLeaf->nextLeaf;
+        curLeaf->nextLeaf = newLeaf;
+
+        if(key == 80){
+            InnerNode* pp = (InnerNode*)curNode->parent;
+            LeafNode* leaf = (LeafNode*)&(pp->children[0]);
+            while(leaf != nullptr){
+                println("SIZE");
+                println(leaf->usedKeys);
+                fori(leaf->usedKeys){
+                    printin(leaf->keys[i]);
+                    printin("");
+                }
+                leaf = leaf->nextLeaf;
+                if(leaf == nullptr)
+                    println("NULL");
+                
+                println("loop");
+            }
+
+        }
+        if(key == 80){
+            println("RETURN");
+            return;
+        }
+        this->split(*curLeaf, *newLeaf, 0, true);
     }
 }
